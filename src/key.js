@@ -5,6 +5,7 @@ key.LEFT = 37;
 key.UP = 38;
 key.RIGHT = 39;
 key.DOWN = 40;
+key.SPACE = 32
 
 key.isDown = function (keyCode) {
   return _pressed[keyCode];
@@ -24,5 +25,6 @@ window.addEventListener('keyup', function (e) {
 window.addEventListener('keydown', function (e) {
   key.onKeydown(e);
 }, false);
+
 
 module.exports = key;

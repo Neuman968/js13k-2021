@@ -1,6 +1,7 @@
 var loop = require('./loop');
 var rand = require('./rand');
 var key = require('./key');
+var mouse = require('./mouse');
 
 var canvas = document.createElement('canvas');
 canvas.width = 640;
@@ -10,49 +11,72 @@ document.body.appendChild(canvas);
 
 var ctx = canvas.getContext('2d');
 
-// demo entity
-var mob = {
-  x: rand.int(canvas.width),
-  y: rand.int(canvas.height),
-  width: 25,
-  height: 25,
-  speed: 150,
-  color: 'rgba(236, 94, 103, 1)'
-};
+const gameState = {
+  player: {
+    x: rand.int(canvas.width),
+    y: rand.int(canvas.height),
+    width: 25,
+    height: 25,
+    speed: 150,
+    color: 'rgba(236, 94, 103, 1)'
+  },
+  projectiles: [],
+}
 
 // game loop
 loop.start(function (dt) {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-  // update mob
+  // update gameState.player
   if (key.isDown(key.LEFT)) {
-    mob.x = mob.x - (mob.speed * dt);
+    gameState.player.x = gameState.player.x - (gameState.player.speed * dt);
   }
   if (key.isDown(key.RIGHT)) {
-    mob.x = mob.x + (mob.speed * dt);
+    gameState.player.x = gameState.player.x + (gameState.player.speed * dt);
   }
   if (key.isDown(key.UP)) {
-    mob.y = mob.y - (mob.speed * dt);
+    gameState.player.y = gameState.player.y - (gameState.player.speed * dt);
   }
   if (key.isDown(key.DOWN)) {
-    mob.y = mob.y + (mob.speed * dt);
+    gameState.player.y = gameState.player.y + (gameState.player.speed * dt);
+  }
+
+  if (key.isDown(key.SPACE) || mouse.isPressed()) {
+    gameState.projectiles.push({
+      x: gameState.player.x,
+      y: gameState.player.y,
+      width: 5,
+      height: 5,
+      speed: 200,
+      color: 'yellow'
+    })
   }
 
   // check bounds collisions
-  if (mob.x < 0) {
-    mob.x = canvas.width;
-  } else if (mob.x > canvas.width) {
-    mob.x = 0;
+  if (gameState.player.x < 0) {
+    gameState.player.x = canvas.width;
+  } else if (gameState.player.x > canvas.width) {
+    gameState.player.x = 0;
   }
-  if (mob.y < 0) {
-    mob.y = canvas.height;
-  } else if (mob.y > canvas.height) {
-    mob.y = 0;
+  if (gameState.player.y < 0) {
+    gameState.player.y = canvas.height;
+  } else if (gameState.player.y > canvas.height) {
+    gameState.player.y = 0;
   }
 
-  // draw mob
-  ctx.fillStyle = mob.color;
-  ctx.fillRect(mob.x, mob.y, mob.width, mob.height);
+  // draw gameState.player
+  ctx.fillStyle = gameState.player.color;
+  ctx.fillRect(gameState.player.x, gameState.player.y, gameState.player.width, gameState.player.height);
 
-  console.log('game update fn %s', dt);
+  // draw gameState.projectiles.
+  gameState.projectiles.forEach((projectile, idx) => {
+    ctx.fillStyle = projectile.color;
+    ctx.fillRect(projectile.x, projectile.y, projectile.width, projectile.height);
+    // Move the projectile in 2d space todo add direction..
+    projectile.x = projectile.x - (projectile.speed * dt)
+    projectile.y = projectile.y - (projectile.speed * dt)
+    gameState.projectiles[idx] = projectile
+  })
+
+  // console.log('game update fn %s', dt);
 });
