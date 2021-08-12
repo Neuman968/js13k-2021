@@ -43,7 +43,7 @@ loop.start(function (dt) {
 
   if (key.isDown(key.SPACE) || mouse.isPressed()) {
     gameState.projectiles.push({
-      x: gameState.player.x,
+      x: (gameState.player.x + (gameState.player.height / 2)),
       y: gameState.player.y,
       width: 5,
       height: 5,
@@ -73,7 +73,7 @@ loop.start(function (dt) {
     ctx.fillStyle = projectile.color;
     ctx.fillRect(projectile.x, projectile.y, projectile.width, projectile.height);
     // Move the projectile in 2d space todo add direction..
-    projectile.x = projectile.x - (projectile.speed * dt)
+    // projectile.x = projectile.x - (projectile.speed * dt)
     projectile.y = projectile.y - (projectile.speed * dt)
     gameState.projectiles[idx] = projectile
   })
