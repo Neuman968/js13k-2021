@@ -11,12 +11,17 @@ document.body.appendChild(canvas);
 
 var ctx = canvas.getContext('2d');
 
+let loaded = false
+let image = new Image()
+image.src = "ship.png"
+image.onload = () => { loaded = true }
+
 const gameState = {
   player: {
     x: rand.int(canvas.width),
     y: rand.int(canvas.height),
-    width: 25,
-    height: 25,
+    width: 50,
+    height: 50,
     speed: 150,
     color: 'rgba(236, 94, 103, 1)'
   },
@@ -65,8 +70,10 @@ loop.start(function (dt) {
   }
 
   // draw gameState.player
-  ctx.fillStyle = gameState.player.color;
-  ctx.fillRect(gameState.player.x, gameState.player.y, gameState.player.width, gameState.player.height);
+  if (loaded) {
+    ctx.drawImage(image, gameState.player.x, gameState.player.y, gameState.player.width, gameState.player.height)
+  }
+
 
   // draw gameState.projectiles.
   gameState.projectiles.forEach((projectile, idx) => {

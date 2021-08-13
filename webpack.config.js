@@ -44,5 +44,12 @@ module.exports = {
 
   resolve: {
     extensions: ['', '.js', 'json']
-  }
+  },
+  loaders: [
+    {
+      // ASSET LOADER
+      test: /\.(png)$/,
+      loader: 'file-loader'
+    },
+  ]
 };

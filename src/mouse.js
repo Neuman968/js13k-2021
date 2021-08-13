@@ -10,7 +10,6 @@ mouse.onPress = (e, pressed) => {
 }
 
 window.addEventListener('mousedown', (e) => {
-    console.log('mousedown!!')
     mouse.onPress(e, true)
 })
 
