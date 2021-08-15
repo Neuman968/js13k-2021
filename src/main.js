@@ -49,7 +49,7 @@ const doFireProjectile = (gameState) => {
     width: 5,
     height: 5,
     speed: 350,
-    color: 'purple'
+    color: 'yellow'
   })
   gameState.player.projectileFiredSince = 0.0
 }
