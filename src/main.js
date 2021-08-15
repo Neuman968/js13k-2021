@@ -4,8 +4,8 @@ var key = require('./key');
 var mouse = require('./mouse');
 
 var canvas = document.createElement('canvas');
-canvas.width = 640;
-canvas.height = 480;
+canvas.width = 1400;
+canvas.height = 700;
 canvas.style.backgroundColor = '#000';
 document.body.appendChild(canvas);
 
@@ -22,7 +22,7 @@ const gameState = {
     y: rand.int(canvas.height),
     width: 50,
     height: 50,
-    speed: 150,
+    speed: 250,
     color: 'rgba(236, 94, 103, 1)'
   },
   projectiles: [],
@@ -52,8 +52,8 @@ loop.start(function (dt) {
       y: gameState.player.y,
       width: 5,
       height: 5,
-      speed: 200,
-      color: 'yellow'
+      speed: 350,
+      color: 'purple'
     })
   }
 
