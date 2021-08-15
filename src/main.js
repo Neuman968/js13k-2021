@@ -4,7 +4,7 @@ var key = require('./key');
 var mouse = require('./mouse');
 
 // Debounce for player firing cannon.
-const PROJECTILE_DBOUNCE_SEC = 0.20 // 1 second
+const PROJECTILE_DBOUNCE_SEC = 0.20 // 1 20th of a second.
 
 var canvas = document.createElement('canvas');
 canvas.width = 1400;
