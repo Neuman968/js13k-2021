@@ -108,6 +108,10 @@ loop.start(function (dt) {
 
     // draw gameState.player
     if (loaded) {
+        // image.style.color = 'red'
+        // image.color = 'red'
+        // image.style.backgroundColor = 'red'
+        // ctx.color = 'red'
         ctx.drawImage(image, gameState.player.x, gameState.player.y, gameState.player.width, gameState.player.height)
     }
 
@@ -124,6 +128,7 @@ loop.start(function (dt) {
     // fudge enemy into existance.
     if (gameState.enemies.length === 0) {
         gameState.enemies.push(enemyFactory.newEnemy(gameState.enemies.length, rand.int(globals.CANVAS_WIDTH), rand.int(globals.CANVAS_HEIGHT / 4)))
+        gameState.enemies.push(enemyFactory.newEnemy(gameState.enemies.length, rand.int(globals.CANVAS_WIDTH / 2), rand.int(globals.CANVAS_HEIGHT / 4)))
     }
 
     // draw gameState.playerProjectiles.
@@ -131,7 +136,6 @@ loop.start(function (dt) {
         ctx.fillStyle = projectile.color;
         ctx.fillRect(projectile.x, projectile.y, projectile.width, projectile.height);
         // Move the projectile in 2d space todo add direction..
-        // projectile.x = projectile.x - (projectile.speed * dt)
         projectile.y = projectile.y - (projectile.speed * dt)
         gameState.playerProjectiles[idx] = projectile
     })
