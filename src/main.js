@@ -5,9 +5,6 @@ var mouse = require('./mouse');
 const enemyFactory = require('./entities/enemyFactory')
 const globals = require('./globals')
 
-// Debounce for player firing cannon.
-const PROJECTILE_DBOUNCE_SEC = 0.20 // 1 20th of a second.
-
 var canvas = document.createElement('canvas');
 canvas.width = globals.CANVAS_WIDTH;
 canvas.height = globals.CANVAS_HEIGHT;
@@ -45,7 +42,7 @@ const gameState = {
         height: 60,
         speed: 250,
         color: 'rgba(236, 94, 103, 1)',
-        projectileFiredSince: PROJECTILE_DBOUNCE_SEC,
+        projectileFiredSince: globals.PROJECTILE_DBOUNCE_SEC,
         health: 100,
     },
     level: 1,
@@ -54,7 +51,7 @@ const gameState = {
     enemyProjectiles: [],
 }
 
-const isProjectileFireable = (dt, firedSince) => (firedSince) >= PROJECTILE_DBOUNCE_SEC
+const isProjectileFireable = (dt, firedSince) => (firedSince) >= globals.PROJECTILE_DBOUNCE_SEC
 
 /**
  * Adds projectiles to game state.
@@ -120,6 +117,7 @@ loop.start(function (dt) {
         gameState.enemies.forEach((enemy) => {
             ctx.drawImage(enemyImage, enemy.x, enemy.y, enemy.width, enemy.height)
             enemy.onNextFrame(dt)
+            gameState.enemyProjectiles.push(...enemy.getFiredProjectiles(dt))
         })
     }
 
@@ -136,6 +134,16 @@ loop.start(function (dt) {
         // projectile.x = projectile.x - (projectile.speed * dt)
         projectile.y = projectile.y - (projectile.speed * dt)
         gameState.playerProjectiles[idx] = projectile
+    })
+
+    // draw enemy projectiles
+    gameState.enemyProjectiles.forEach((projectile, idx) => {
+        ctx.fillStyle = projectile.color;
+        ctx.fillRect(projectile.x, projectile.y, projectile.width, projectile.height);
+        // Move the projectile in 2d space todo add direction..
+        // projectile.x = projectile.x - (projectile.speed * dt)
+        projectile.y = projectile.y + (projectile.speed * dt)
+        gameState.enemyProjectiles[idx] = projectile
     })
 
     gameState.player.projectileFiredSince = gameState.player.projectileFiredSince + dt;

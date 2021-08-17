@@ -11,8 +11,13 @@ class Enemy {
         this.width = 60
         this.speed = speed
         this.movingLeft = movingLeft
+        this.projectileFiredSince = globals.PROJECTILE_DBOUNCE_SEC
     }
 
+    /**
+     * Updates the current entity based on new frame.
+     * @param dt (Delta Time)
+     */
     onNextFrame(dt) {
         if (this.movingLeft) {
             this.x = this.x - (this.speed * dt)
@@ -26,6 +31,28 @@ class Enemy {
             }
         }
     }
+
+    /**
+     * Returns an array of projectiles fired.
+     * @param dt
+     */
+    getFiredProjectiles(dt) {
+        if (globals.isProjectileFireable(dt, this.projectileFiredSince)) {
+            this.projectileFiredSince = 0.0
+            return [{
+                x: (this.x + (this.height / 2)),
+                y: this.y + (this.width / 2),
+                width: 5,
+                height: 5,
+                speed: 350,
+                color: 'red',
+            }]
+        } else {
+            this.projectileFiredSince = this.projectileFiredSince + dt;
+        }
+        return []
+    }
+
 }
 
 
