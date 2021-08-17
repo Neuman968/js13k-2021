@@ -3,16 +3,14 @@ var rand = require('./rand');
 var key = require('./key');
 var mouse = require('./mouse');
 const enemyFactory = require('./entities/enemyFactory')
+const globals = require('./globals')
+
 // Debounce for player firing cannon.
 const PROJECTILE_DBOUNCE_SEC = 0.20 // 1 20th of a second.
 
-const CANVAS_WIDTH = 1400
-
-const CANVAS_HEIGHT = 700;
-
 var canvas = document.createElement('canvas');
-canvas.width = CANVAS_WIDTH;
-canvas.height = CANVAS_HEIGHT;
+canvas.width = globals.CANVAS_WIDTH;
+canvas.height = globals.CANVAS_HEIGHT;
 canvas.style.backgroundColor = '#000';
 document.body.appendChild(canvas);
 
@@ -121,24 +119,13 @@ loop.start(function (dt) {
     if (enemyAssetLoaded) {
         gameState.enemies.forEach((enemy) => {
             ctx.drawImage(enemyImage, enemy.x, enemy.y, enemy.width, enemy.height)
-            if (enemy.movingLeft) {
-                enemy.x = enemy.x - (285 * dt)
-                if (enemy.x < 0) {
-                    enemy.movingLeft = false
-                }
-            } else {
-                enemy.x = enemy.x + (285 * dt)
-                if (enemy.x >= (CANVAS_WIDTH - enemy.width)) {
-                    enemy.movingLeft = true
-                }
-            }
-            // enemy.y = enemy.y - (285 * dt)
+            enemy.onNextFrame(dt)
         })
     }
 
     // fudge enemy into existance.
     if (gameState.enemies.length === 0) {
-        gameState.enemies.push(enemyFactory.newEnemy(gameState.enemies.length, rand.int(CANVAS_WIDTH), rand.int(CANVAS_HEIGHT / 4)))
+        gameState.enemies.push(enemyFactory.newEnemy(gameState.enemies.length, rand.int(globals.CANVAS_WIDTH), rand.int(globals.CANVAS_HEIGHT / 4)))
     }
 
     // draw gameState.playerProjectiles.
