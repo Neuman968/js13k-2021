@@ -30,7 +30,6 @@ enemyImage.onload = () => {
     enemyAssetLoaded = true
 }
 
-
 /**
  * contains player object and list of all projectiles on board.
  */
@@ -38,12 +37,13 @@ const gameState = {
     player: {
         x: rand.int(canvas.width),
         y: rand.int(canvas.height),
-        width: 60,
-        height: 60,
+        width: 35,
+        height: 30,
         speed: 250,
         color: 'rgba(236, 94, 103, 1)',
         projectileFiredSince: globals.PROJECTILE_DBOUNCE_SEC,
         health: 100,
+        damaged: 0.001,
     },
     level: 1,
     playerProjectiles: [],
@@ -106,15 +106,6 @@ loop.start(function (dt) {
         gameState.player.y = 0;
     }
 
-    // draw gameState.player
-    if (loaded) {
-        // image.style.color = 'red'
-        // image.color = 'red'
-        // image.style.backgroundColor = 'red'
-        // ctx.color = 'red'
-        ctx.drawImage(image, gameState.player.x, gameState.player.y, gameState.player.width, gameState.player.height)
-    }
-
     // draw enemies...
     // todo we should probably have an enemy generator of some sorts.
     if (enemyAssetLoaded) {
@@ -144,11 +135,31 @@ loop.start(function (dt) {
     gameState.enemyProjectiles.forEach((projectile, idx) => {
         ctx.fillStyle = projectile.color;
         ctx.fillRect(projectile.x, projectile.y, projectile.width, projectile.height);
+
+        // check for player collision
+        if (globals.isCollide(gameState.player, projectile)) {
+            gameState.player.damaged = 0.001
+        }
+
         // Move the projectile in 2d space todo add direction..
         // projectile.x = projectile.x - (projectile.speed * dt)
         projectile.y = projectile.y + (projectile.speed * dt)
         gameState.enemyProjectiles[idx] = projectile
     })
+
+    // draw gameState.player
+    if (loaded) {
+        ctx.drawImage(image, gameState.player.x, gameState.player.y, gameState.player.width, gameState.player.height)
+        // check for damage animation draw.
+        if (gameState.player.damaged > 0.00) {
+            ctx.fillStyle = 'red'
+            ctx.fillRect(gameState.player.x, gameState.player.y, gameState.player.width, gameState.player.height)
+            gameState.player.damaged += dt
+            if (gameState.player.damaged >= 0.25) {
+                gameState.player.damaged = 0.00
+            }
+        }
+    }
 
     gameState.player.projectileFiredSince = gameState.player.projectileFiredSince + dt;
 
