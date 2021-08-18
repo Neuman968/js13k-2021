@@ -126,7 +126,13 @@ loop.start(function (dt) {
     gameState.playerProjectiles.forEach((projectile, idx) => {
         ctx.fillStyle = projectile.color;
         ctx.fillRect(projectile.x, projectile.y, projectile.width, projectile.height);
-        // Move the projectile in 2d space todo add direction..
+
+        // check for enemy collision.
+        const hitIdxs = gameState.enemies.filter((enemy) => globals.isCollide(enemy, projectile))
+            .map((en, idx) => idx)
+        // Remove hit enemies.
+        hitIdxs.forEach(idx => gameState.enemies.splice(idx, 1))
+
         projectile.y = projectile.y - (projectile.speed * dt)
         gameState.playerProjectiles[idx] = projectile
     })
